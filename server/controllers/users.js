@@ -20,3 +20,16 @@ export const register = async (req, res)=>{
     }
 }
 
+export const login = async (req, res)=>{
+    try {
+            const loginUser= await user.findOne({username:req.body.username})
+            !loginUser && res.status(400).json("wrong username or password")
+
+            const validPassword= await bcrypt.compare(req.body.password,loginUser.password)
+            !validPassword && res.status(400).json("wrong username or password")
+            res.status(200).json({_id:loginUser._id, username:loginUser.username})
+
+    }catch (error) {
+
+    }
+}
