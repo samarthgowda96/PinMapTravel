@@ -3,7 +3,7 @@ import { Room, Cancel} from "@material-ui/icons";
 import {useRef,useState} from 'react';
 import axios from 'axios';
 
-export default function Register(){
+export default function Register({setShowRegister}){
     const [success,setSuccess]=useState(false);
     const [error,setError]=useState(false);
     const nameRef= useRef();
@@ -18,7 +18,7 @@ export default function Register(){
             password:passwordRef.current.value,
         }
         try {
-            const res = await axios.post("http://localhost:6900/api/users/register",newUser)
+            const res = await axios.post("https://pinmaptravel.herokuapp.com/api/users/register",newUser)
             setError(false)
             setSuccess(true)
             
@@ -46,7 +46,7 @@ export default function Register(){
                 }{error &&
                 <span className="failure"> Failed. Retry</span>}
             </form>
-            <Cancel className="registerCancel"/>
+            <Cancel className="registerCancel" onClick={()=>setShowRegister(false)}/>
 
         </div>
     )

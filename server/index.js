@@ -18,9 +18,12 @@ mongoose.connect(process.env.MONGO_URL,{useNewUrlParser:true,  useUnifiedTopolog
 }).catch((e)=>{
     console.log(e)
 })
-
+app.get('/',(req, res)=>{
+    res.send("hello pin map api")
+})
+const PORT = process.env.PORT||6900;
 app.use('/api/pins',pins);
 app.use('/api/users',users);
-app.listen(6900,() => {
+app.listen(`${PORT}`,() => {
     console.log("running of port 6900")
 })

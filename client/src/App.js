@@ -6,11 +6,11 @@ import { Room, Star, StarBorder } from "@material-ui/icons";
 import axios from "axios";
 import { format } from "timeago.js";
 import Register from "./components/Register";
-/*import Login from "./components/Login"; */
+import Login from "./components/Login"; 
 
 function App() {
   const myStorage = window.localStorage;
-  const [currentUser, setCurrentUser] = useState(null)
+  const [currentUser, setCurrentUser] = useState(myStorage.getItem("user"))
   const [pins, setPins] = useState([]);
   const [currentPlaceId, setCurrentPlaceId] = useState(null);
   const [newPlace, setNewPlace] = useState(null);
@@ -22,8 +22,8 @@ function App() {
     longitude: 75.7139,
     zoom: 4,
   });
- /*  const [showRegister, setShowRegister] = useState(false);
-  const [showLogin, setShowLogin] = useState(false); */
+  const [showRegister, setShowRegister] = useState(false);
+  const [showLogin, setShowLogin] = useState(false); 
 
   const handleMarkerClick = (id, lat, long) => {
     setCurrentPlaceId(id);
@@ -50,7 +50,7 @@ function App() {
     };
 
     try {
-      const res = await axios.post("http://localhost:6900/api/pins", newPin);
+      const res = await axios.post("https://pinmaptravel.herokuapp.com/api/pins", newPin);
       setPins([...pins, res.data]);
       setNewPlace(null);
     } catch (err) {
@@ -61,7 +61,7 @@ function App() {
   useEffect(() => {
     const getPins = async () => {
       try {
-        const allPins = await axios.get("http://localhost:6900/api/pins");
+        const allPins = await axios.get("https://pinmaptravel.herokuapp.com/api/pins");
         setPins(allPins.data);
       } catch (err) {
         console.log(err);
@@ -70,10 +70,10 @@ function App() {
     getPins();
   }, []);
 
-  /* const handleLogout = () => {
-    setCurrentUsername(null);
+   const handleLogout = () => {
+    setCurrentUser(null);
     myStorage.removeItem("user");
-  }; */
+  }; 
 
   return (
     <div style={{ height: "100vh", width: "100%" }}>
@@ -188,14 +188,16 @@ function App() {
           </>
         )}
         {currentUser?(
-          <button className="button logout">Log out</button>
+          <button className="button logout" onClick={handleLogout}>Log out</button>
           
           ):(<div className="buttons">
-          <button className="button login">Login</button>
-          <button className="button register">Register</button>
+          <button className="button login" onClick={()=>setShowLogin(true)}>Login</button>
+          <button className="button register" onClick={()=>setShowRegister(true)}>Register</button>
         </div>)
         }
-        <Register/>
+        {showLogin&& <Login setShowLogin={setShowLogin} myStorage={myStorage} setCurrentUser={setCurrentUser}/>}
+        {showRegister&& <Register setShowRegister={setShowRegister}/>}
+        
       </ReactMapGL>
     </div>
   );
