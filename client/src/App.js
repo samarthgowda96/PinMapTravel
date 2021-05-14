@@ -38,8 +38,9 @@ function App() {
     
    },[]) 
    
-   const handleMarkerClick=(id)=>{
+   const handleMarkerClick=(id,lat,long)=>{
      setCurrentPlaceId(id)
+     setViewport({...viewport,latitude:lat,longitude:long})
  }
    const handleAddClick=(e)=>{
      const [long,lat]=e.lngLat;
@@ -58,6 +59,7 @@ function App() {
         onViewportChange={nextViewport => setViewport(nextViewport)}
         mapStyle='mapbox://styles/samarthgowda/ckonhl1ai145k17ni9ilv527h'
         onDblClick={handleAddClick}
+        transitionDuration="5 00"
       >
         {pins.map(pin=>(
 
@@ -78,7 +80,7 @@ function App() {
           color:pin.username===currentUser?"tomato":"slateblue ",
           cursor:"pointer"
         }}
-        onClick={()=>handleMarkerClick(pin._id)}
+        onClick={()=>handleMarkerClick(pin._id,pin.lat,pin.long)}
         />
         </Marker>
         {pin._id===currentPlaceId && (
@@ -126,8 +128,27 @@ function App() {
           closeOnClick={false}
           anchor="left"
           onClose={()=>setNewPlace(null)}
-           >Hello </Popup>
+           >
+             <div>
+               <form>
+                 <label>Title</label>
+                 <input placeholder="Enter a title"></input>
+                 <label>Review</label>
+                 <textarea placeholder="say something about this place you love"></textarea>
+                 <label>Rating</label>
+                 <select>
+                   <option value="1">1</option>
+                   <option value="2">2</option>
+                   <option value="3">3</option>
+                   <option value="4">4</option>
+                   <option value="5">5</option>
+                 </select>
+                 <button className="submitButton" type="submit">Add Pin :)</button>
+               </form>
+             </div>
+       </Popup>
         )}
+
 
       </ReactMapGL>
       
