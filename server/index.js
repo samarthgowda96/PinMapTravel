@@ -3,12 +3,14 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import pins from './routes/pins.js'
 import users from './routes/users.js'
+import cors from 'cors'
 
 const app=express();
 
 
 
 dotenv.config();
+app.use(cors())
 app.use(express.json());
 mongoose.connect(process.env.MONGO_URL,{useNewUrlParser:true,  useUnifiedTopology: true, useCreateIndex:true})
 .then(()=>{
