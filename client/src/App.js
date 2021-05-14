@@ -9,6 +9,10 @@ function App() {
   const [pins,setPins]=useState([])
   const [currentPlaceId, setCurrentPlaceId]=useState(null)
   const [newPlace, setNewPlace]=useState(null)
+  const [title,setTitle] =useState(null)
+  const [desc,setDesc] =useState(null)
+  const [rating,setRating] =useState(0 )
+
   const [viewport, setViewport] = useState({
     width: "100vw",
     height: "100vw",
@@ -50,7 +54,27 @@ function App() {
      });
 
    }
+   const handleSubmit=async(e)=>{
+     e.preventDefault();
+     const newPin={
+       username:currentUser,
+       title,
+       desc,
+       rating,
+       lat:newPlace.lat,
+       long:newPlace.long
+     }
+     try {
+       const res = await axios.post('http://localhost:6900/api/pins',newPin)
+       setPins([...pins],res.data);
+       setNewPlace(null);
+       
+     } catch (error) {
+       console.log(error)
+       
+     }
 
+   }
   return (
     <div className="App">
         <ReactMapGL
@@ -130,13 +154,16 @@ function App() {
           onClose={()=>setNewPlace(null)}
            >
              <div>
-               <form>
+               <form onSubmit={handleSubmit}>
                  <label>Title</label>
-                 <input placeholder="Enter a title"></input>
+                 <input placeholder="Enter a title" onChange={(e)=>setTitle(e.target.value)}></input>
                  <label>Review</label>
-                 <textarea placeholder="say something about this place you love"></textarea>
+                 <textarea 
+                  placeholder="say something about this place you love"
+                  onChange={(e)=>setDesc(e.target.value)}
+                  />
                  <label>Rating</label>
-                 <select>
+                 <select onChange={(e)=>setRating(e.target.value)}>
                    <option value="1">1</option>
                    <option value="2">2</option>
                    <option value="3">3</option>
